@@ -56,6 +56,7 @@ tasks:
       - kind
       - source ~/.bashrc
 
+# more on pyenv & python: https://pycon.switowski.com/02-packages/
   pyenv:
     desc: Install PyEnv
     cmds:
@@ -63,6 +64,10 @@ tasks:
       - echo "Installing Pyenv"
       - brew update
       - brew install pyenv
+      - git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+      - echo 'eval "$(pyenv init -)"' >> $HOME/.bashrc
+      - echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bashrc
+      - source ~/.bashrc
 
   python:
     desc: "Install Python, version: {{ .PYTHON_VERSION }}"
@@ -76,6 +81,11 @@ tasks:
       - echo 'alias python="$(pyenv which python)"' >> $HOME/.bashrc
       - echo 'alias pip="$(pyenv which pip)"' >> $HOME/.bashrc
       - source ~/.bashrc
+      
+      # todo: not working with Taskfile
+      # - python -m pip install --user pipx
+      # - python -m pipx ensurepath
+      # - pipx install flake8
 
 
 
