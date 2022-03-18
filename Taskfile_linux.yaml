@@ -1,0 +1,82 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  KIND_VERSION: v0.12.0
+  PYTHON_VERSION: 3.10.3
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  info:
+    desc: Get info on Linux Os
+    cmds:
+      - cat /etc/os-release
+
+  brew:
+    desc: Install Homebrew
+    cmds:
+      - echo "Installing Homebrew"
+      - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.bashrc
+      - eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      - source ~/.bashrc
+
+  kubernetes:
+    desc: Install kubectl, Helm and Kubernetes in Docker
+    cmds:
+      - sudo apt update
+      - echo "Installing kubectl..."
+      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - echo "Validating kubectl install"
+      - kubectl
+      - rm ./kubectl
+      
+      - echo "Installing Helm..."
+      - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      - chmod 700 get_helm.sh
+      - ./get_helm.sh
+      - echo "Validating Helm install"
+      - helm
+      - rm ./get_helm.sh
+
+      - echo "Installing Kubernetes In Docker"
+      - curl -Lo ./kind https://kind.sigs.k8s.io/dl/{{.KIND_VERSION}}/kind-linux-amd64
+      - chmod +x ./kind
+      - mkdir -p $HOME/programs/kind
+      - mv ./kind $HOME/programs/kind
+      - echo "export PATH=\"$HOME/programs/kind:\$PATH\"" >> $HOME/.bashrc
+      - echo "Validating KInD install"
+      - kind
+      - source ~/.bashrc
+
+  pyenv:
+    desc: Install PyEnv
+    cmds:
+      - sudo apt update
+      - echo "Installing Pyenv"
+      - brew update
+      - brew install pyenv
+
+  python:
+    desc: "Install Python, version: {{ .PYTHON_VERSION }}"
+    cmds:
+      - sudo apt-get install build-essential
+      - echo "Installing Python"
+      - pyenv install {{ .PYTHON_VERSION }}
+      - pyenv global {{ .PYTHON_VERSION }}
+      - echo "Installed Python version"
+      - pyenv version
+      - echo 'alias python="$(pyenv which python)"' >> $HOME/.bashrc
+      - echo 'alias pip="$(pyenv which pip)"' >> $HOME/.bashrc
+      - source ~/.bashrc
+
+
+
+

@@ -1,0 +1,5 @@
+version: '3'
+
+includes:
+  linux: ./Taskfile_linux.yaml
+  windows: ./Taskfile_windows.yaml

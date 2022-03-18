@@ -1,0 +1,20 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  KIND_VERSION: v0.12.0
+  PYTHON_VERSION: 3.10.3
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  
+  info:
+    desc: Get info on Windows OS
+    cmds:
+      - Get-ComputerInfo | select WindowsProductName, WindowsVersion, OsHardwareAbstractionLayer
