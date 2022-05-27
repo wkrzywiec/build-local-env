@@ -6,6 +6,7 @@ vars:
   GREETING: Hello, World!
   KIND_VERSION: v0.14.0
   PYTHON_VERSION: 3.8
+  JAVA_VERSION: 17.0.3-tem
 
 tasks:
   default:
@@ -28,7 +29,7 @@ tasks:
       - source ~/.bashrc
 
   kubernetes:
-    desc: Install kubectl, Helm and Kubernetes in Docker
+    desc: "Install kubectl, Helm and Kubernetes in Docker (ver: {{ .KIND_VERSION }})"
     cmds:
       - sudo apt update
       - echo "Installing kubectl..."
@@ -55,6 +56,28 @@ tasks:
       - echo "Validating KInD install"
       - source ~/.bashrc
       - kind
+
+  java:
+    desc: "Install SDKMAN! with Java (ver: {{ .JAVA_VERSION }}), Maven and Gradle (both latest)"
+    cmds:
+      - sudo apt update
+      - echo "Installing SDKMAN!"
+      - curl -s "https://get.sdkman.io" | bash
+      - source "$HOME/.sdkman/bin/sdkman-init.sh"
+      - echo "Validating SDKMAN! installation"
+      
+      # todo: not working with Taskfile
+      # - sdk version
+      # - echo "Installing Java"
+      # - sdk install java {{ .JAVA_VERSION }}
+      # - echo "Validating Java version"
+      # - java --version
+      # - echo "Installing Maven and Gradle"
+      # - sdk install maven
+      # - sdk install gradle
+      # - echo ""Validating Maven and Gradle installation"
+      # - gradle --version
+      # - mvn --version
 
 # more on pyenv & python: https://pycon.switowski.com/02-packages/
   pyenv:
